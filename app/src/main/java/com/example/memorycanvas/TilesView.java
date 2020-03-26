@@ -81,7 +81,7 @@ public class TilesView extends View {
         listCards = (new ArrayList<Card>(Arrays.asList(cards)));
          */
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
@@ -170,7 +170,7 @@ public class TilesView extends View {
 
     public void onClick() {
         listCards.clear();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
@@ -215,6 +215,7 @@ public class TilesView extends View {
 
     }
 }
+
 
 
 
