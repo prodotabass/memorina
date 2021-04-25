@@ -52,6 +52,7 @@ class Card {
 public class TilesView extends View {
     int openedCard = 0;
     Card openCard;
+      //TODO: изменить задержку, долгая
     final int PAUSE_LENGTH = 2;
     boolean isOnPause = false;
     int n = 4;
@@ -70,6 +71,7 @@ public class TilesView extends View {
         super(context, attrs);
         // 1) заполнить массив tiles случайными цветами
         /*
+//TODO:удалить очень интересный комментарий
         cards[0] = new Card(0, 0, 200, 300, Color.YELLOW);
         cards[1] = new Card(200 + 50, 0, 200 + 50, 300, Color.YELLOW);
         cards[2] = new Card(500 + 50, 0, 200 + 50, 300, Color.GREEN);
@@ -82,11 +84,12 @@ public class TilesView extends View {
          */
 
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++) { //TODO упостить создание новых карт
                 listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
             }
         }
+             //TODO: упроситть процедуру генерирования цветов
         for (int i = 0; i < listCards.size(); i += 2) {
             listCards.get(i).color = Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
             listCards.get(i + 1).color = Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
@@ -100,6 +103,7 @@ public class TilesView extends View {
         width = getWidth();
         height = getHeight();
         // 2) отрисовка плиток
+       //TODO: переменная p не используется
         Paint p = new Paint();
         p.setColor(Color.GREEN);
 
@@ -107,7 +111,7 @@ public class TilesView extends View {
             c.draw(canvas);
         }
         if (listCards.size() == 0) {
-            Toast.makeText(getContext(), "Карты на столе закончились! Вы нашли все пары", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Карты на столе закончились! Вы нашли все пары", Toast.LENGTH_SHORT).show(); //TODO:Упростим текст
         }
     }
 
@@ -133,6 +137,7 @@ public class TilesView extends View {
                 if (openedCard == 1) {
                     // если открылись карты одинакого цвета, то удалить из списка иначе запустить задержку
                     // перевернуть карту с задержкой
+                     //TODO: повторяющиеся команды, можно сделать проще
                     if (c.flip(x, y) && openCard != c) {
                         openedCard++;
                         if (openCard.color == c.color) {
@@ -171,7 +176,7 @@ public class TilesView extends View {
     public void onClick() {
         listCards.clear();
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++) {//TODO: тут также упрощаем создание новых карт
                 listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
             }
