@@ -52,8 +52,7 @@ class Card {
 public class TilesView extends View {
     int openedCard = 0;
     Card openCard;
-      //TODO: изменить задержку, долгая
-    final int PAUSE_LENGTH = 2;
+    final int PAUSE_LENGTH = 1;
     boolean isOnPause = false;
     int n = 4;
     static ArrayList<Card> listCards = new ArrayList<>();
@@ -70,30 +69,25 @@ public class TilesView extends View {
     public TilesView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         // 1) заполнить массив tiles случайными цветами
-        /*
-//TODO:удалить очень интересный комментарий
-        cards[0] = new Card(0, 0, 200, 300, Color.YELLOW);
-        cards[1] = new Card(200 + 50, 0, 200 + 50, 300, Color.YELLOW);
-        cards[2] = new Card(500 + 50, 0, 200 + 50, 300, Color.GREEN);
-        cards[3] = new Card(800 + 50, 0, 200 + 50, 300, Color.GREEN);
-        cards[4] = new Card(0, 300 + 50, 200, 300, Color.RED);
-        cards[5] = new Card(200 + 50, 300 + 50, 200 + 50, 300, Color.RED);
-        cards[6] = new Card(500 + 50, 300 + 50, 200 + 50, 300, Color.BLUE);
-        cards[7] = new Card(800 + 50, 300 + 50, 200 + 50, 300, Color.BLUE);
-        listCards = (new ArrayList<Card>(Arrays.asList(cards)));
          */
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) { //TODO упостить создание новых карт
-                listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
+                int x = widthCard * j + distance * j + distance;
+                int y = heightCard * i + distance * i;
+                listCards.add(new Card(x, y, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
             }
+
         }
-             //TODO: упроситть процедуру генерирования цветов
+
         for (int i = 0; i < listCards.size(); i += 2) {
-            listCards.get(i).color = Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
-            listCards.get(i + 1).color = Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
+            listCards.get(i).color = GenColor(i);
+            listCards.get(i + 1).color = GenColor(i);
         }
+    }
+    int GenColor(int i) {
+        return Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
     }
 
 
@@ -103,15 +97,13 @@ public class TilesView extends View {
         width = getWidth();
         height = getHeight();
         // 2) отрисовка плиток
-       //TODO: переменная p не используется
-        Paint p = new Paint();
-        p.setColor(Color.GREEN);
+
 
         for (Card c : listCards) {
             c.draw(canvas);
         }
         if (listCards.size() == 0) {
-            Toast.makeText(getContext(), "Карты на столе закончились! Вы нашли все пары", Toast.LENGTH_SHORT).show(); //TODO:Упростим текст
+            Toast.makeText(getContext(), "Победа!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -137,25 +129,20 @@ public class TilesView extends View {
                 if (openedCard == 1) {
                     // если открылись карты одинакого цвета, то удалить из списка иначе запустить задержку
                     // перевернуть карту с задержкой
-                     //TODO: повторяющиеся команды, можно сделать проще
                     if (c.flip(x, y) && openCard != c) {
                         openedCard++;
+                        invalidate();
+                        PauseTask task = new PauseTask();
                         if (openCard.color == c.color) {
-                            invalidate();
-                            PauseTask task = new PauseTask();
                             task.execute(0);
-                            isOnPause = true;
                             listCards.remove(openCard);
                             listCards.remove(c);
-                            return true;
                         } else {
                             // запуск задержки
-                            invalidate();
-                            PauseTask task = new PauseTask();
                             task.execute(PAUSE_LENGTH);
-                            isOnPause = true;
-                            return true;
                         }
+                        isOnPause = true;
+                        return true;
                     }
                 }
             }
@@ -176,18 +163,24 @@ public class TilesView extends View {
     public void onClick() {
         listCards.clear();
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {//TODO: тут также упрощаем создание новых карт
-                listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
+            for (int j = 0; j < n; j++) {
+                int x = widthCard * j + distance * j + distance;
+                int y = heightCard * i + distance * i;
+                listCards.add(new Card(x, y, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
             }
         }
-        for (int i = 0; i < listCards.size(); i += 2) {
-            listCards.get(i).color = Color.rgb(i * 30 + 20, i * 15, i * 20 + 5);
-            listCards.get(i + 1).color = Color.rgb(i * 30 + 20, i * 15, i * 20 + 5);
+        for (int i = 0; i < listCards.size(); i += 2) { 
+            listCards.get(i).color = GenColor2(i);
+            listCards.get(i + 1).color = GenColor2(i);
         }
+
         invalidate();
         Toast.makeText(getContext(), "Карты переразданы!", Toast.LENGTH_SHORT).show();
 
+    }
+    int GenColor2(int i) {
+        return Color.rgb(i * 30 + 20, i * 15, i * 20 + 5);
     }
 
     class PauseTask extends AsyncTask<Integer, Void, Void> {
@@ -220,7 +213,3 @@ public class TilesView extends View {
 
     }
 }
-
-
-
-
